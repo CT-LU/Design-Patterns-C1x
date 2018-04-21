@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <memory>
 
 class IProduct {
 	public:
@@ -19,24 +20,24 @@ class ProductB : public IProduct {
 
 class ICreator {
 	public:
-		virtual IProduct* factoryMethod() = 0;
+		virtual std::shared_ptr<IProduct> factoryMethod() = 0;
 };
 
 class CreatorA : public ICreator {
 	public:
-		IProduct* factoryMethod() { return new ProductA(); }
+                std::shared_ptr<IProduct> factoryMethod() { return std::dynamic_pointer_cast<IProduct>(std::make_shared<ProductA>()); }
 };
 
 class CreatorB : public ICreator {
 	public:
-		IProduct* factoryMethod() { return new ProductB(); }
+                std::shared_ptr<IProduct> factoryMethod() { return std::make_shared<ProductB>(); }
 };
 
 int main(int argc, char* argv[])
 {
-	std::vector<ICreator*> factory(2);
-	factory[0] = new CreatorA();
-	factory[1] = new CreatorB();
+	std::vector<std::shared_ptr<ICreator> > factory(2);
+	factory[0] = std::make_shared<CreatorA>();
+	factory[1] = std::make_shared<CreatorB>();
 	
 	factory[0]->factoryMethod()->getName();
 	factory[1]->factoryMethod()->getName();
