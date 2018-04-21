@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <memory>
 
 std::string indent = "    ";
 
@@ -12,21 +13,22 @@ class IFile {
 class Dir : public IFile {
 	private:
 		std::string _name;
-		std::vector<IFile*> files;
+		std::vector<std::shared_ptr<IFile> > files;
 	public:
 		Dir(std::string name) : _name(name) {};
+
 		void ls() {
 			std::cout << _name << ":" << std::endl; 
 			for(int i = 0; i < files.size(); i++) {
 				std::cout << indent;
-				if( dynamic_cast<Dir*>(files[i]) ) {
+				if( std::dynamic_pointer_cast<std::shared_ptr<Dir> >(files[i]) ) {
 					indent += "     ";
 				}			
 				files[i]->ls();
 			}	
 		}
 
-		void add(IFile* file) {
+		void add(std::shared_ptr<IFile> file) {
 			files.push_back(file);
 		}
 };
@@ -44,17 +46,17 @@ class File : public IFile {
 
 int main(int argc, char* argv[])
 {
-	File* one = new File("one");
-	File* two = new File("two");
-	File* three = new File("three");
+        std::shared_ptr<File> f1 = std::make_shared<File>("f1");
+        std::shared_ptr<File> f2 = std::make_shared<File>("f2");
+        std::shared_ptr<File> f3 = std::make_shared<File>("f3");
 
-	Dir* dir1 = new Dir("dir1");
-	Dir* dir2 = new Dir("dir2");
+        std::shared_ptr<Dir> dir1 = std::make_shared<Dir>("dir1");
+        std::shared_ptr<Dir> dir2 = std::make_shared<Dir>("dir2");
 
-	dir1->add(one);
-	dir1->add(two);
+	dir1->add(f1);
+	dir1->add(f2);
 	dir1->add(dir2);
-	dir2->add(three);
+	dir2->add(f3);
 	
 	dir1->ls();
 }

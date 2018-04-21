@@ -1,5 +1,6 @@
 #include <vector>
 #include <iostream>
+#include <memory>
 
 
 class IObserver {
@@ -68,8 +69,8 @@ class Investor2 : public IObserver {
 int main(int argc, char* argv[]) 
 {
 	StockMarket s;
-	Investor1* i1 = new Investor1(s);
-	Investor2* i2 = new Investor2(s);
+        std::shared_ptr<Investor1> i1 = std::make_shared<Investor1>(s);
+        std::shared_ptr<Investor2> i2 = std::make_shared<Investor2>(s);
 	
 	s.setValue(31);
 	s.setValue(30);
