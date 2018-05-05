@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <memory> 
 
 class Lunch {
 	private:
@@ -34,11 +35,9 @@ class Drink : public Lunch {
 
 int main(int argc, char* argv[]) 
 {
-	Lunch* me  = new Noodle();		
+        std::shared_ptr<Lunch> me  = std::make_shared<Noodle>();		
 	me->haveLunch();	
 
-	delete me;
-
-	me = new Drink();
+	me = std::make_shared<Drink>();
 	me->haveLunch();
 }
