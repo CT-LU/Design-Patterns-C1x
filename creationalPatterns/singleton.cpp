@@ -7,7 +7,7 @@ class Singleton
         private:
 		int num;
                 Singleton(const Singleton&) = delete;
-                Singleton & operator=(const Singleton&) = delete;
+                Singleton& operator=(const Singleton&) = delete;
 
                 static std::unique_ptr<Singleton> object;
         public:
@@ -29,7 +29,7 @@ int main()
 {
         Singleton& s1 = Singleton::Instance();
         std::cout << s1.getNum() << std::endl;
-	s1.setNum(2);
+        s1.setNum(2);
         std::cout << s1.getNum() << std::endl;
         Singleton& s2 = Singleton::Instance();
         std::cout << s2.getNum() << std::endl;
