@@ -8,6 +8,7 @@ class Singleton
 		int num;
                 Singleton() = default;
                 Singleton(const Singleton&) = delete;
+                Singleton(const Singleton&&) = delete;
                 Singleton& operator=(const Singleton&) = delete;
 
                 static std::unique_ptr<Singleton> object;
