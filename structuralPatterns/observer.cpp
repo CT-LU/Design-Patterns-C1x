@@ -3,7 +3,7 @@
 #include <memory>
 
 
-class IObserver {
+class IObserver : public std::enable_shared_from_this<IObserver> {
 	public:
 		void virtual update(int value) = 0;
 };	
@@ -11,7 +11,7 @@ class IObserver {
 class StockMarket {
 	private:
 		int _value;
-		std::vector<IObserver*> _observers;
+		std::vector<std::shared_ptr<IObserver>> _observers;
 		
 		void notify() {
 			for(int i = 0; i < _observers.size(); i++) {
@@ -24,7 +24,7 @@ class StockMarket {
 			notify();
 		}
 
-		void pushObserver(IObserver* obs) {
+		void pushObserver(std::shared_ptr<IObserver> obs) {
 			_observers.push_back(obs);
 		}
 
@@ -34,8 +34,8 @@ class Investor1 : public IObserver {
 	private:
 		std::string _name;
 	public:
-		Investor1(StockMarket& s) {
-			s.pushObserver(this);
+                void invest(StockMarket& s){
+			s.pushObserver(shared_from_this());
 			_name = "Joe";
 		}
 
@@ -52,8 +52,8 @@ class Investor2 : public IObserver {
 	private:
 		std::string _name;
 	public:	
-		Investor2(StockMarket& s) {
-			s.pushObserver(this);
+		void invest(StockMarket& s) {
+			s.pushObserver(shared_from_this());
 			_name = "John";
 		}
 
@@ -69,8 +69,10 @@ class Investor2 : public IObserver {
 int main(int argc, char* argv[]) 
 {
 	StockMarket s;
-        std::shared_ptr<Investor1> i1 = std::make_shared<Investor1>(s);
-        std::shared_ptr<Investor2> i2 = std::make_shared<Investor2>(s);
+        std::shared_ptr<Investor1> i1 = std::make_shared<Investor1>();
+        std::shared_ptr<Investor2> i2 = std::make_shared<Investor2>();
+        i1->invest(s);
+        i2->invest(s);
 	
 	s.setValue(31);
 	s.setValue(30);
